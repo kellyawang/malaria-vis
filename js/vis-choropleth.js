@@ -1,25 +1,35 @@
+// TODO: need to map topo shapes to UN population!
+// TODO: need to filter out topo countries that don't have an entry in global-malaria csv!!!
+// TODO: colorscale not working at all hrm
 
 
-// --> CREATE SVG DRAWING AREA
+// --> CREATE SVG DRAWING AREA: one for both visualizations
 var margin = { top: 40, right: 0, bottom: 60, left: 60 };
 
-var width = 860 - margin.left - margin.right
-var height = 900 - margin.top - margin.bottom;
+let width = 860 - margin.left - margin.right
+let height = 900 - margin.top - margin.bottom;
 
-// SVG drawing area
+// SVG drawing area - map
 var svg = d3.select("#map-area").append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
     .append("g")
-    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-svg.append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+    .append("g")
     .attr("class", "legend")
+
+// SVG drawing area - tree
+// d3.select("#tree-area").append("svg")
+//     .attr("width", width + margin.left + margin.right)
+//     .attr("height", height + margin.top + margin.bottom)
+//     .append("g")
+//     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 // Global objects
 var convertedMalariaData = [];
 var countryDataByCountryId = {};
 var finalMapJson = {};
+var parasiteJson = {};
 
 // Create color scale
 // https://github.com/d3/d3-scale-chromatic
@@ -27,16 +37,21 @@ var finalMapJson = {};
 //  .domain([100000, 2000000000]) //1,377,240,453 // 
 //  .range(d3.schemeBlues[7]);
 
+/** OPTION1: SCALE THRESHOLD */
 // reference: https://github.com/d3/d3-scale/blob/master/README.md#sequential-scales
-var colorScale = d3.scaleThreshold()
+// var colorScale = d3.scaleThreshold()
 //  .domain([100000, 750000000, 1500000000])
-  .range(["#c6dbef","#9ecae1","#084594"]);
+//   .range(["#c6dbef","#9ecae1","#084594"]);
+
+/** OPTION2: QUANTIZE SCALE */
+var blues = ["#eff3ff","#c6dbef","#9ecae1","#6baed6","#4292c6","#2171b5","#084594"]
+var qScale = d3.scaleQuantize()
+    .range(blues)
+
   
 // var colorScale = d3.scaleOrdinal(d3.schemeCategory10); //d3.schemeCategory10
 // colorScale.domain(["America", "East Asia & Pacific", "Europe & Central Asia", "Middle East & North Africa", "South Asia", "Sub-Saharan Africa"]);
 // console.log(`color palette for America: ${colorScale("America")}`)
-
-// d3.scaleQuantize([1, 10]
 
 // Use the Queue.js library to read two files
 queue()
@@ -67,9 +82,22 @@ queue()
     // console.log(convertedMalariaData)
 
     // Update choropleth
-    updateChoropleth(mapTopJson);
+    updateChoropleth();
+
   });
-    
+
+createTreeVis()
+
+function createTreeVis() {
+
+    d3.json("data/malaria-parasites.json", function(error, jsonData){
+        if(!error){
+            parasiteJson = jsonData;
+            var treeVis = new TreeVis("tree-area", parasiteJson)
+        }
+    });
+
+}
 
 function updateChoropleth() {
 
@@ -80,21 +108,22 @@ function updateChoropleth() {
   console.log("quantscale of 186342:" + quantScale(186342) + "; quantscale of 1377240453:" + quantScale(1377240453))
   //d3.schemeCategory10
   */
-  var blues = ["#eff3ff","#c6dbef","#9ecae1","#6baed6","#4292c6","#2171b5","#084594"]
-  var qScale = d3.scaleQuantize()
-    .range(blues)
 
-  // let selector = d3.select("#data-type").property("value");
-  // console.log("selector value:" + selector)
-
-    qScale.domain([
-    d3.min(convertedMalariaData, function(d) { return d.UN_population; }),
-    d3.max(convertedMalariaData, function(d) { return d.UN_population; })
-    ]);
-  
   console.log("CONVERTED MALARIA DATA")
   console.log(convertedMalariaData)
-  colorScale.domain([d3.min(convertedMalariaData, d => d.UN_population), d3.max(convertedMalariaData, d => d.UN_population)])
+  // colorScale.domain([d3.min(convertedMalariaData, d => d.UN_population), d3.max(convertedMalariaData, d => d.UN_population)])
+
+    let selector = d3.select("#data-type").property("value");
+  console.log("selectorvalue:" + selector)
+
+    console.log("d[selector]:" + convertedMalariaData[0][selector])
+
+    qScale.domain([
+    d3.min(convertedMalariaData, function(d) {
+        return d[selector]; }),
+    d3.max(convertedMalariaData, function(d) { return d[selector]; })
+    ]);
+  
 
 
   // --> Choropleth implementation
@@ -109,12 +138,9 @@ function updateChoropleth() {
   var path = d3.geoPath()
       .projection(projection);
 
-  // Convert TopoJSON to GeoJSON (target object = 'countries')
+  // Convert TopoJSON to GeoJSON
   var usa = topojson.feature(finalMapJson, finalMapJson.objects.collection).features
 
-  // TODO: need to map topo shapes to UN population! 
-  // TODO: need to filter out topo countries that don't have an entry in global-malaria csv!!!
-  // TODO: colorscale not working at all hrm
 
   // Render the U.S. by using the path generator
   // Bind data and create one path per TopoJSON feature
@@ -130,13 +156,9 @@ function updateChoropleth() {
           // console.log(countryDataByCountryId[code])
           // console.log("population:" + countryDataByCountryId[code].UN_population)
           // console.log("color:" + qScale(countryDataByCountryId[code].UN_population))
-          return qScale(countryDataByCountryId[code].UN_population)
+          return qScale(countryDataByCountryId[code][selector])
         }
         return "#636363"
       })
-
-      
-    // color the map based on UN population
-    // colorScale from min UN population to max UN population
 
 }
