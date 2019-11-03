@@ -1,0 +1,20 @@
+
+/* YOUR CSS STYLES */
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f7f7f7;
+    text-align: center;
+}
+
+#map-area svg {
+    margin: 20px;
+    background-color: white;
+}
+
+.container {
+    margin-top: 40px;
+    /* margin-bottom: 15vh; */
+    padding-top: 20px;
+    padding-bottom: 15vh;
+    /* background-color: white; */
+}
