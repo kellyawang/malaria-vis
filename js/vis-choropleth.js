@@ -40,6 +40,7 @@ var convertedMalariaData = [];
 var countryDataByCountryId = {};
 var finalMapJson = {};
 var parasiteJson = {};
+var t = d3.transition().duration(50);
 
 // Create color scale
 // https://github.com/d3/d3-scale-chromatic
@@ -58,6 +59,7 @@ var blues = ["#eff3ff","#c6dbef","#9ecae1","#6baed6","#4292c6","#2171b5","#08459
 var reds = ["#ffffd4","#fed98e","#fe9929","#d95f0e","#993404"]
 var qScale = d3.scaleQuantize()
     .range(reds)
+
 
   
 // var colorScale = d3.scaleOrdinal(d3.schemeCategory10); //d3.schemeCategory10
@@ -149,15 +151,30 @@ function updateChoropleth() {
   // Convert TopoJSON to GeoJSON
   var usa = topojson.feature(finalMapJson, finalMapJson.objects.collection).features
 
+  var tip = d3.tip()
+      .attr("class", "d3-tip")
+      .offset([-10,0])
+      .html(function(d) {
+          let code = d.properties.adm0_a3_is
+          let countryData = countryDataByCountryId[code]
+          let selector = d3.select("#data-type").property("value")
+          return `<span class="tooltip-title">${countryData.Country}<br></span>
+                <span>Population: ${countryData.UN_population}</span><br>
+                <span>At Risk: ${countryData.At_risk}%</span><br>
+                <span>High Risk: ${countryData.At_high_risk}%</span><br>
+                <span>Suspected Cases: ${countryData.Suspected_malaria_cases}%</span><br>
+                <span>Diagnosed Cases: ${countryData.Malaria_cases}%</span><br>`;
+      });
 
+    svg.call(tip);
   // Render the U.S. by using the path generator
   // Bind data and create one path per TopoJSON feature
   svg.selectAll("path")
       .data(usa)
     .enter().append("path")
       .attr("d", path)
-      .attr("fill", function(d) {
-        var code = d.properties.adm0_a3_is
+      .style("fill", function(d) {
+        let code = d.properties.adm0_a3_is
         
         if (countryDataByCountryId[code]) {
           // console.log("iso code:" + code)
@@ -168,7 +185,40 @@ function updateChoropleth() {
         }
         return "#636363"
       })
+      .on("mouseover", function(d) {
+          let code = d.properties.adm0_a3_is
+          if (countryDataByCountryId[code]) {
+              console.log(`hovering over ${countryDataByCountryId[code].Country}`)
+              tip.show(d)
+              d3.select(this)
+                  .style("fill", "#b10026")
+          }
+      })
+      .on("mouseout", function(d) {
+          let code = d.properties.adm0_a3_is
+          if (countryDataByCountryId[code]) {
+              tip.hide(d)
+              d3.select(this)
+                  .style("fill", function(d) { return qScale(countryDataByCountryId[code][selector]) })
+          }
+      })
 
-  svg.selectAll("rect")
-      .data()
+  // Draw legend
+  // svg.selectAll("rect")
+      // .data(reds)
+}
+
+
+function hoverEffectOn(object) {
+    d3.select(object)
+        .transition()
+        .duration(100)
+        .style("fill", "#4541ff");
+}
+
+function hoverEffectOff(object) {
+    d3.select(object)
+        .transition()
+        .duration(100)
+        .style("fill", "white");
 }
