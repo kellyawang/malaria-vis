@@ -1,6 +1,6 @@
 // References:
 // https://github.com/d3/d3-hierarchy/blob/master/README.md#tree
-//
+// https://observablehq.com/@d3/tidy-tree
 
 TreeVis = function(_parentElement, _data) {
     this.parentElement = _parentElement;
