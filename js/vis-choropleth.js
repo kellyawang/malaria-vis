@@ -2,12 +2,22 @@
 // TODO: need to filter out topo countries that don't have an entry in global-malaria csv!!!
 // TODO: colorscale not working at all hrm
 
+// Jumbotron code taken from one of my previous homeworks (Homework 5)
+var jumboHeight = $('.jumbotron').outerHeight();
+function parallax(){
+    var scrolled = $(window).scrollTop();
+    $('.bg').css('height', (jumboHeight - scrolled) + 'px');
+}
+
+$(window).scroll(function(e){
+    parallax();
+});
 
 // --> CREATE SVG DRAWING AREA: one for both visualizations
 var margin = { top: 40, right: 0, bottom: 60, left: 60 };
 
-let width = 860 - margin.left - margin.right
-let height = 900 - margin.top - margin.bottom;
+let width = 660 - margin.left - margin.right
+let height = 800 - margin.top - margin.bottom;
 
 // SVG drawing area - map
 var svg = d3.select("#map-area").append("svg")
@@ -45,8 +55,9 @@ var parasiteJson = {};
 
 /** OPTION2: QUANTIZE SCALE */
 var blues = ["#eff3ff","#c6dbef","#9ecae1","#6baed6","#4292c6","#2171b5","#084594"]
+var reds = ["#ffffd4","#fed98e","#fe9929","#d95f0e","#993404"]
 var qScale = d3.scaleQuantize()
-    .range(blues)
+    .range(reds)
 
   
 // var colorScale = d3.scaleOrdinal(d3.schemeCategory10); //d3.schemeCategory10
@@ -123,11 +134,8 @@ function updateChoropleth() {
         return d[selector]; }),
     d3.max(convertedMalariaData, function(d) { return d[selector]; })
     ]);
-  
-
 
   // --> Choropleth implementation
-  // TODO: do stuff to create chloropleth projection 
   // create mercator projection
   var projection = d3.geoMercator() //d3.geoStereographic() // d3.geoOrthographic()
     .scale([500])
@@ -161,4 +169,6 @@ function updateChoropleth() {
         return "#636363"
       })
 
+  svg.selectAll("rect")
+      .data()
 }

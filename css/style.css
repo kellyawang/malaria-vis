@@ -1,20 +1,68 @@
 
 /* YOUR CSS STYLES */
+.bg {
+    background: url('../img/malaria_stock3.jpg') no-repeat center center;
+    position: fixed;
+    width: 100%;
+    height: 75vh; /*same height as jumbotron */
+    top:0;
+    left:0;
+    z-index: -1;
+}
+.jumbotron {
+    height: 50vh;
+    color: white;
+    /*text-shadow: #444 0 1px 1px;*/
+    background-color: #993404;
+}
+
 body {
     font-family: 'Roboto', sans-serif;
     background-color: #f7f7f7;
-    text-align: center;
+    text-align: left;
 }
 
-#map-area svg {
+h1, h2, h3, h4, h5 {
+    text-align: center;
+}
+#map-area svg, #tree-area svg {
     margin: 20px;
     background-color: white;
 }
 
-.container {
+#map-area {
+    text-align: center;
+}
+
+.content.container {
     margin-top: 40px;
     /* margin-bottom: 15vh; */
     padding-top: 20px;
     padding-bottom: 15vh;
     /* background-color: white; */
+}
+
+.section {
+    padding: 20px;
+    margin-top: 10vh;
+    margin-bottom: 25vh;
+}
+
+#mosquito {
+    width: 60%;
+}
+
+.fast-fact p {
+    /*max-width: 75%;*/
+    text-align: center;
+}
+.fast-fact {
+    text-align: center;
+    min-height: 200px;
+    margin: 10px;
+    padding: 20px;
+    border-style: solid;
+    border-radius: 25px;
+    border-width: medium;
+    border-color: #993404;
 }
