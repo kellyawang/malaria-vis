@@ -19,7 +19,7 @@ TreeVis.prototype.initVis = function() {
 
     vis.margin = {top: 40, right: 0, bottom: 60, left: 60};
 
-    vis.width = 800 - vis.margin.left - vis.margin.right,
+    vis.width = 860 - vis.margin.left - vis.margin.right,
     vis.height = 400 - vis.margin.top - vis.margin.bottom;
 
     // SVG drawing area
@@ -93,14 +93,25 @@ TreeVis.prototype.updateVis = function() {
         .attr("transform", d => `translate(${d.y},${d.x})`);
 
     nodes.append("circle")
+        .attr("class", "node")
         // .attr("fill", d => d.children ? "#993404" : "#d95f0e")
         .attr("fill", "#993404")
-        .attr("r", 8);
+        .attr("r", 8)
+        // .on("mouseover")
+        // .on("mouseout")
 
     nodes.append("text")
         .attr("dy", d => d.children ? -20 : 5)
         .attr("x", d => d.children ? -8 : 10)
         .attr("text-anchor", d => d.children ? "middle" : "start")
         .text(d => d.data.name)
+
+}
+
+TreeVis.prototype.hoverEffectOn = function() {
+
+}
+
+TreeVis.prototype.hoverEffectOff = function() {
 
 }

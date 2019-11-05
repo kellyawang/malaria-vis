@@ -11,26 +11,51 @@
 }
 .jumbotron {
     height: 50vh;
+    min-height: 200px;
     color: white;
     /*text-shadow: #444 0 1px 1px;*/
-    background-color: #993404;
+    background-color: #671fa3;
 }
 
 body {
-    font-family: 'Roboto', sans-serif;
-    background-color: #f7f7f7;
+    font-family: 'Roboto Slab', serif, sans-serif;
+    /*background-color: #f7f7f7;*/
+    background: #f7f9f6 url(../img/background.jpg) fixed;
     text-align: left;
+}
+
+header {
+    text-align: center;
+    font-size: 3rem;
 }
 
 h1, h2, h3, h4, h5 {
     text-align: center;
 }
-#map-area svg, #tree-area svg {
-    margin: 20px;
-    background-color: white;
+
+.h2-left {
+    text-align: left;
 }
 
-#map-area {
+.h2-right {
+    text-align: right;
+}
+p.p1 {
+    font-size: 1.2rem;
+    text-align: center;
+}
+
+p.p1#nets-detail {
+    padding-top: 50px;
+}
+
+#map-area svg, #tree-area svg {
+    /*margin: 20px;*/
+    background-color: white;
+    border-radius: 15px;
+}
+
+#map-area, #tree-area {
     text-align: center;
 }
 
@@ -42,14 +67,34 @@ h1, h2, h3, h4, h5 {
     /* background-color: white; */
 }
 
+.row {
+    padding: 25px 0px;
+}
+
 .section {
     padding: 20px;
-    margin-top: 10vh;
-    margin-bottom: 25vh;
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+.quote {
+    padding: 10px;
+    /*margin: 20px;*/
+}
+
+#nets {
+    width: 100%;
+    border-radius: 15px;
 }
 
 #mosquito {
     width: 60%;
+    border-radius: 15px;
+    /*max-width: 250px;*/
+}
+
+.col-6.centered-content {
+    text-align: center;
 }
 
 .fast-fact p {
@@ -64,7 +109,27 @@ h1, h2, h3, h4, h5 {
     border-style: solid;
     border-radius: 25px;
     border-width: medium;
-    border-color: #993404;
+    border-color: #671fa3;
+    background-color: white;
+}
+
+
+/*********************/
+/*  MAPS SECTION     */
+/*********************/
+option {
+    font-family: 'Roboto', sans-serif;
+}
+
+select {
+    margin-left: 10px;
+}
+
+/*********************/
+/* PARASITES section */
+/*********************/
+.parasite {
+    font-weight: bold;
 }
 
 /*********************/
