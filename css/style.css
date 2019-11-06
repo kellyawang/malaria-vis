@@ -1,7 +1,9 @@
 
 /* YOUR CSS STYLES */
 .bg {
-    background: url('../img/malaria_stock3.jpg') no-repeat center center;
+    background: url('../img/who_018089.png') no-repeat center center;
+    background-size: cover;
+    max-width: 100%;
     position: fixed;
     width: 100%;
     height: 75vh; /*same height as jumbotron */
@@ -10,17 +12,17 @@
     z-index: -1;
 }
 .jumbotron {
-    height: 50vh;
+    height: 75vh;
     min-height: 200px;
     color: white;
-    /*text-shadow: #444 0 1px 1px;*/
-    background-color: #671fa3;
+    text-shadow: #444 0 1px 1px;
+    background: transparent;
 }
 
 body {
     font-family: 'Roboto Slab', serif, sans-serif;
     /*background-color: #f7f7f7;*/
-    background: #f7f9f6 url(../img/background.jpg) fixed;
+    background: url(../img/background.jpg) fixed;
     text-align: left;
 }
 
@@ -72,28 +74,30 @@ p.p1#nets-detail {
 }
 
 .section {
-    padding: 20px;
+    margin-left: 150px;
+    margin-right: 150px;
+    padding-left: 60px;
+    padding-right: 60px;
+    padding-top: 20px;
+    padding-bottom: 30px;
     margin-top: 30px;
-    margin-bottom: 30px;
+    margin-bottom: 15vh;
+    max-width: 1140px;
+}
+
+.section.gray {
+    padding-left: 80px;
+    padding-right: 80px;
+    border-radius: 15px;
+    background-color: #EEEEEE;
 }
 
 .quote {
-    padding: 10px;
+    padding: 40px;
     /*margin: 20px;*/
 }
 
-#nets {
-    width: 100%;
-    border-radius: 15px;
-}
-
-#mosquito {
-    width: 60%;
-    border-radius: 15px;
-    /*max-width: 250px;*/
-}
-
-.col-6.centered-content {
+.centered-content {
     text-align: center;
 }
 
@@ -113,7 +117,28 @@ p.p1#nets-detail {
     background-color: white;
 }
 
-
+/*********************/
+/*  IMG     */
+/*********************/
+img {
+    border-radius: 15px;
+}
+#nets {
+    width: 100%;
+}
+#mosquito {
+    width: 80%;
+    /*max-width: 250px;*/
+}
+#teaching {
+    width: 95%;
+}
+#bluenet {
+    width: 100%;
+}
+#table {
+    width: 100%;
+}
 /*********************/
 /*  MAPS SECTION     */
 /*********************/
@@ -125,11 +150,35 @@ select {
     margin-left: 10px;
 }
 
+path.map-paths {
+    stroke: #262626;
+    stroke-width: 0.5;
+}
+
+rect.legend-rect {
+    stroke: #636363;
+    stroke-width: 0.5;
+}
+
+rect#no-data {
+    fill: #BCBCBC;
+}
+
+text.legend-label {
+    text-anchor: start;
+    font-size: 10px;
+}
 /*********************/
 /* PARASITES section */
 /*********************/
 .parasite {
     font-weight: bold;
+}
+
+#tree-area path {
+    stroke: #555;
+    stroke-opacity: 0.4;
+    stroke-width: 1.5;
 }
 
 /*********************/

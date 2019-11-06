@@ -5,10 +5,8 @@
 TreeVis = function(_parentElement, _data) {
     this.parentElement = _parentElement;
     this.data = _data;
-    this.displayData = []; // see data wrangling
+    this.displayData = [];
 
-    // DEBUG RAW DATA
-    // console.log(this.data);
     this.displayData = this.data;
 
     this.initVis();
@@ -34,10 +32,6 @@ TreeVis.prototype.initVis = function() {
 
 TreeVis.prototype.wrangleData = function() {
     var vis = this;
-
-    // In the first step no data wrangling/filtering needed
-    // vis.displayData = vis.stackedData;
-
     // Update the visualization
     vis.updateVis();
 }
@@ -47,34 +41,18 @@ TreeVis.prototype.updateVis = function() {
     var vis = this;
 
     const root = d3.hierarchy(vis.displayData);
-    root.dx = 30;
-    console.log(`root.dy = ${vis.width} / ${root.height} + 1`)
+    root.dx = 40;
     root.dy = width / (root.height + 1);
-    root.y = vis.height/2
+    root.y = vis.height/2 + 200
+
     var tree = d3.tree().nodeSize([root.dx, root.dy])(root);
 
-    // let x0 = Infinity;
-    // let x1 = -x0;
-    // root.each(d => {
-    //     if (d.x > x1) x1 = d.x;
-    //     if (d.x < x0) x0 = d.x;
-    // });
-
-    console.log("------------")
-    console.log(vis.displayData)
-    console.log(root.links())
-    console.log("descendants:")
-    console.log(root.descendants())
-    console.log("------------")
-
+    // Draw the svg tree
     var linesGroup = vis.svg.append("g")
         .attr("transform", `translate(${root.dy / 3},${vis.height/2})`);
 
     var lines = linesGroup.append("g")
         .attr("fill", "none")
-        .attr("stroke", "#555")
-        .attr("stroke-opacity", 0.4)
-        .attr("stroke-width", 1.5)
         .selectAll("path")
         .data(root.links())
         .enter()
@@ -84,8 +62,6 @@ TreeVis.prototype.updateVis = function() {
             .y(d => d.x));
 
     var nodes = linesGroup.append("g")
-        // .attr("stroke-linejoin", "round")
-        // .attr("stroke-width", 3)
         .selectAll("g")
         .data(root.descendants())
         .enter()
@@ -94,24 +70,35 @@ TreeVis.prototype.updateVis = function() {
 
     nodes.append("circle")
         .attr("class", "node")
-        // .attr("fill", d => d.children ? "#993404" : "#d95f0e")
-        .attr("fill", "#993404")
+        .attr("fill", d => {
+            if (d.data.name == "P. falciparum") {
+                return "#e34d04"
+            } else {
+                return d.children ? "#fff" : "#C04604"
+            }
+        })
         .attr("r", 8)
-        // .on("mouseover")
-        // .on("mouseout")
+        .attr("stroke", d => {
+            if (d.data.children) {
+                return "#853004"
+            } else {
+                return (d.data.name == "P. falciparum") ? "#e34d04" : "#C04604"
+            }
+        })
+        .attr("stroke-width", 2)
 
     nodes.append("text")
         .attr("dy", d => d.children ? -20 : 5)
-        .attr("x", d => d.children ? -8 : 10)
+        .attr("x", d => d.children ? -8 : 15)
         .attr("text-anchor", d => d.children ? "middle" : "start")
         .text(d => d.data.name)
 
-}
-
-TreeVis.prototype.hoverEffectOn = function() {
-
-}
-
-TreeVis.prototype.hoverEffectOff = function() {
+    vis.svg.append("g")
+        .append("text")
+        .attr("x", -30)
+        .attr("y", vis.height + 20)
+        .attr("font-style", "italic")
+        .attr("font-size", "18px")
+        .text("How are malaria parasites transmitted to humans?")
 
 }
